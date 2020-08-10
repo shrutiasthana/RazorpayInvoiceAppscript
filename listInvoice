@@ -1,0 +1,24 @@
+function callsdate() {
+ var lvss = SpreadsheetApp.getActiveSpreadsheet();
+ var lvSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Filter");
+
+ var keyid = "rzp_live_---------";
+ var key = "--------------";
+ var url= 'https://api.razorpay.com/v1/invoices?count=20&skip=0'; 
+ var headers = {"Authorization" : "Basic " + Utilities.base64Encode(keyid + ':' + key)}; 
+ var options = { "method": "GET", "headers": headers,"muteHttpExceptions": true, "contentType" : "application/json",}; 
+ var response = UrlFetchApp.fetch(encodeURI(url), options);
+ //Logger.log(response.getContentText()); 
+ var dataAll = JSON.parse(response.getContentText()); 
+ Logger.log(response);
+var arr = [];
+for (var i=0; i<20; i++){ 
+var id = dataAll.items[i].id;
+var date = dataAll.items[i].status;
+var details = dataAll.items[i].paid_at;
+
+var status = dataAll.items[i].amount;
+var curr = dataAll.items[i].currency;
+
+lvSheet.appendRow([date,id,status, details,curr]);  }
+}
